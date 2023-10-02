@@ -1,19 +1,17 @@
 package com.study.oksk.controller;
-import com.study.oksk.dto.AddressDto;
-import com.study.oksk.entity.AddressEntity;
-import com.study.oksk.service.AddressService;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import com.study.oksk.dto.AddressDto;
+import com.study.oksk.service.AddressService;
+import com.study.oksk.transfer.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
 @RestController // TODO:  REST --> ENDPOINTS что это
-@RequestMapping("/api/addresses")
+@RequestMapping("/api/address")
 public class AddressController {
 
     private final AddressService addressService;
@@ -25,60 +23,69 @@ public class AddressController {
 
     @GetMapping()
     public ResponseEntity<Object> findAll(){
-        List<AddressDto> addressDto = addressService.findAll();
-        if(!addressDto.isEmpty()){
-            return ResponseEntity.ok(addressDto);
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No addresses, try later");
+        try {
+            List<AddressDto> addressDto = addressService.findAll();
+            if (!addressDto.isEmpty()) {
+                return ResponseEntity.ok(addressDto);
+            } else {
+                return ResponseEntity.internalServerError().build();
+            }
+        }catch(Exception e){
+            return ResponseEntity.internalServerError().build();
         }
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<Object> findById(@PathVariable("id") int id){
-        AddressDto addressDto = addressService.findById(id);
-        if(addressDto != null){
-            return ResponseEntity.ok(addressDto);
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No address with such id: " + id);
+        try {
+            AddressDto addressDto = addressService.findById(id);
+            if (addressDto != null) {
+                return ResponseEntity.ok(addressDto);
+            } else {
+                return ResponseEntity.internalServerError().build();
+            }
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().build();
         }
     }
 
     @PostMapping()
-    public ResponseEntity<String> createAddress(@RequestBody AddressDto addressDto){
+    public ResponseEntity<Integer> createAddress(@Validated(value = {New.class}) @RequestBody AddressDto addressDto){
         try{
-            int id = addressService.save(addressDto);
-            return ResponseEntity.ok("Address created successfully, id: " + id);
+            return ResponseEntity.ok(addressService.save(addressDto));
         }catch(Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something go wrong, try again later");
+            return ResponseEntity.internalServerError().build();
         }
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable int id){
-        AddressDto addressDto = addressService.findById(id);
-        if(addressDto != null){
-            addressService.deleteById(id);
-            return ResponseEntity.ok("Address - '"+addressDto.getAddress()+":"+addressDto.getPort()+"' deleted successfully");
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No address with such id: " + id);
+    public ResponseEntity<Integer> deleteById(@PathVariable int id){
+        try {
+            AddressDto addressDto = addressService.findById(id);
+            if (addressDto != null) {
+                addressService.deleteById(id);
+                return ResponseEntity.ok(id);
+            } else {
+                return ResponseEntity.internalServerError().build();
+            }
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().build();
         }
     }
 
-    //TODO: Добавить update
     @PutMapping()
-    public ResponseEntity<String> updateAddress(@RequestBody AddressDto updatedAddressDto) {
-        AddressDto existingAddressDto = addressService.findById(updatedAddressDto.getId());
-        if (existingAddressDto != null) {
-            existingAddressDto.setAddress(updatedAddressDto.getAddress());
-            existingAddressDto.setPort(updatedAddressDto.getPort());
-            try {
-                addressService.update(existingAddressDto);
-                return ResponseEntity.ok("Address with ID: " + updatedAddressDto.getId() + " updated successfully");
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update the address");
+    public ResponseEntity<Integer> updateAddress(@Validated(value = Exist.class) @RequestBody AddressDto updatedAddressDto) {
+        try {
+            AddressDto existingAddressDto = addressService.findById(updatedAddressDto.getId());
+            if (existingAddressDto != null) {
+                existingAddressDto.setAddress(updatedAddressDto.getAddress());
+                existingAddressDto.setPort(updatedAddressDto.getPort());
+                return ResponseEntity.ok(addressService.save(existingAddressDto));
+            } else {
+                return ResponseEntity.internalServerError().build();
             }
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No address found with ID: " + updatedAddressDto.getId());
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().build();
         }
     }
 }

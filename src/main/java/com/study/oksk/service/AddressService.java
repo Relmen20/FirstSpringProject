@@ -41,7 +41,6 @@ public class AddressService {
     }
 
     public void update(AddressDto addressDto){ //TODO Добавить update +++
-//        addressRepository.
         addressRepository.save(addressMapper.addressDtoToEntity(addressDto));
     }
 }

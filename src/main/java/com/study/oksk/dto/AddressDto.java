@@ -1,10 +1,21 @@
 package com.study.oksk.dto;
 
-import java.io.Serializable;
+import com.study.oksk.transfer.Exist;
+import com.study.oksk.transfer.New;
 
-public class AddressDto implements Serializable {
+import javax.validation.constraints.*;
+
+public class AddressDto{
+    @Null(groups = {New.class})
+    @NotNull(groups = {Exist.class})
     private int id;
+
+    @NotNull(groups = {New.class, Exist.class})
+    @Size(min = 1024, max = 65535)
     private int port;
+
+    @NotNull(groups = {New.class, Exist.class})
+    @Pattern(regexp = "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$")
     private String address;
 
     public int getId() {
