@@ -2,8 +2,11 @@ package com.study.oksk.controller;
 
 import com.study.oksk.dto.OperatorDto;
 import com.study.oksk.service.OperatorService;
+import com.study.oksk.transfer.New;
+import com.study.oksk.transfer.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,12 +25,7 @@ public class OperatorController {
     @GetMapping
     public ResponseEntity<List<OperatorDto>> findAll(){
         try{
-            List<OperatorDto> operatorDto = operatorService.findAll();
-            if(!operatorDto.isEmpty()){
-                return ResponseEntity.ok(operatorDto);
-            }else{
-                return ResponseEntity.notFound().build();
-            }
+            return ResponseEntity.ok(operatorService.findAll());
         }catch(Exception e){
             return ResponseEntity.internalServerError().build();
         }
@@ -48,7 +46,7 @@ public class OperatorController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> save(@RequestBody OperatorDto operatorDto){
+    public ResponseEntity<Integer> save(@Validated(value = {New.class}) @RequestBody OperatorDto operatorDto){
         try{
             return ResponseEntity.ok(operatorService.save(operatorDto));
         }catch (Exception e){
@@ -72,12 +70,12 @@ public class OperatorController {
     }
 
     @PutMapping
-    public ResponseEntity<Integer> update(@RequestBody OperatorDto updateOperatorDto){
+    public ResponseEntity<Integer> update(@Validated(value = {Update.class}) @RequestBody OperatorDto updateOperatorDto){
         try{
-            OperatorDto operatorDto = operatorService.findById(updateOperatorDto.getId());
-            if(operatorDto != null){
-                operatorDto.setOperatorName(updateOperatorDto.getOperatorName());
-                return ResponseEntity.ok(operatorService.save(operatorDto));
+            OperatorDto existOperatorDto = operatorService.findById(updateOperatorDto.getId());
+            if(existOperatorDto != null){
+                existOperatorDto.setOperatorName(updateOperatorDto.getOperatorName());
+                return ResponseEntity.ok(operatorService.save(existOperatorDto));
             }else{
                 return ResponseEntity.notFound().build();
             }

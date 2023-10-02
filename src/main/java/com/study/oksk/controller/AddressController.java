@@ -24,12 +24,7 @@ public class AddressController {
     @GetMapping()
     public ResponseEntity<List<AddressDto>> findAll(){
         try {
-            List<AddressDto> addressDto = addressService.findAll();
-            if (!addressDto.isEmpty()) {
-                return ResponseEntity.ok(addressDto);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            return ResponseEntity.ok(addressService.findAll());
         }catch(Exception e){
             return ResponseEntity.internalServerError().build();
         }
