@@ -22,7 +22,7 @@ public class AddressService {
         this.addressMapper = addressMapper;
     }
 
-    public List<AddressDto> findAll(){ //TODO: Сервис возвращает только dto во всех методах +++
+    public List<AddressDto> findAll(){
         return addressRepository.findAll().stream()
                 .map(addressMapper::addressEntityToDto)
                 .collect(Collectors.toList());
@@ -33,14 +33,10 @@ public class AddressService {
     }
 
     public int save(AddressDto addressDto) {
-        return addressRepository.save(addressMapper.addressDtoToEntity(addressDto)).getId();//TODO вернуть только id в контроллер +++
+        return addressRepository.save(addressMapper.addressDtoToEntity(addressDto)).getId();
     }
 
     public void deleteById(int id) {
-        addressRepository.deleteById(id); //TODO: Тут только удаление, логику обертки в контроллер +++
-    }
-
-    public void update(AddressDto addressDto){ //TODO Добавить update +++
-        addressRepository.save(addressMapper.addressDtoToEntity(addressDto));
+        addressRepository.deleteById(id);
     }
 }

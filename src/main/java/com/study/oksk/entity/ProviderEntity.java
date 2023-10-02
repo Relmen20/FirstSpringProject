@@ -13,16 +13,16 @@ public class ProviderEntity {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private AddressEntity addressEntity;
     @Column(name = "provider_name")
-    private String provider_name;
+    private String providerName;
     @Column(name = "email")
     private String email;
 
     public ProviderEntity(){}
 
-    public ProviderEntity(int id, AddressEntity addressEntity, String provider_name, String email) {
+    public ProviderEntity(int id, AddressEntity addressEntity, String providerName, String email) {
         this.id = id;
         this.addressEntity = addressEntity;
-        this.provider_name = provider_name;
+        this.providerName = providerName;
         this.email = email;
     }
 
@@ -42,12 +42,12 @@ public class ProviderEntity {
         this.addressEntity = addressEntity;
     }
 
-    public String getProvider_name() {
-        return provider_name;
+    public String getProviderName() {
+        return providerName;
     }
 
-    public void setProvider_name(String provider_name) {
-        this.provider_name = provider_name;
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
     }
 
     public String getEmail() {

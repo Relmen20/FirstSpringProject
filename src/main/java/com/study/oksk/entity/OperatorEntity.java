@@ -9,13 +9,13 @@ public class OperatorEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @Column(name = "operator_name")
-    private String operator_name;
+    private String operatorName;
 
     public OperatorEntity(){}
 
-    public OperatorEntity(int id, String operator_name) {
+    public OperatorEntity(int id, String operatorName) {
         this.id = id;
-        this.operator_name = operator_name;
+        this.operatorName = operatorName;
     }
 
     public int getId() {
@@ -26,11 +26,11 @@ public class OperatorEntity {
         this.id = id;
     }
 
-    public String getOperator_name() {
-        return operator_name;
+    public String getOperatorName() {
+        return operatorName;
     }
 
-    public void setOperator_name(String operator_name) {
-        this.operator_name = operator_name;
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
     }
 }

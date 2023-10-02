@@ -1,10 +1,10 @@
 package com.study.oksk.dto;
 
-import com.study.oksk.entity.AddressEntity;
+import com.study.oksk.dto.AddressDto;
 
 public class ProviderDto {
     private int id;
-    private AddressEntity addressEntity;
+    private AddressDto addressDto;
     private String providerName;
     private String email;
 
@@ -16,12 +16,12 @@ public class ProviderDto {
         this.id = id;
     }
 
-    public AddressEntity getAddressEntity() {
-        return addressEntity;
+    public AddressDto getAddressDto() {
+        return addressDto;
     }
 
-    public void setAddressEntity(AddressEntity addressEntity) {
-        this.addressEntity = addressEntity;
+    public void setAddressDto(AddressDto addressDto) {
+        this.addressDto = addressDto;
     }
 
     public String getProviderName() {

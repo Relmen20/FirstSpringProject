@@ -20,16 +20,16 @@ public class SessionEntity {
     @JoinColumn(name = "provider_id", referencedColumnName = "id")
     private ProviderEntity providerEntity;
     @Column(name = "session_name")
-    private String session_name;
+    private String sessionName;
 
     public SessionEntity(){}
 
-    public SessionEntity(int id, OperatorEntity operatorEntity, PriorityType priorityType, ProviderEntity providerEntity, String session_name) {
+    public SessionEntity(int id, OperatorEntity operatorEntity, PriorityType priorityType, ProviderEntity providerEntity, String sessionName) {
         this.id = id;
         this.operatorEntity = operatorEntity;
         this.priorityType = priorityType;
         this.providerEntity = providerEntity;
-        this.session_name = session_name;
+        this.sessionName = sessionName;
     }
 
     public int getId() {
@@ -64,11 +64,11 @@ public class SessionEntity {
         this.providerEntity = providerEntity;
     }
 
-    public String getSession_name() {
-        return session_name;
+    public String getSessionName() {
+        return sessionName;
     }
 
-    public void setSession_name(String session_name) {
-        this.session_name = session_name;
+    public void setSessionName(String sessionName) {
+        this.sessionName = sessionName;
     }
 }

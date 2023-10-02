@@ -1,13 +1,13 @@
 package com.study.oksk.dto;
 
-import com.study.oksk.entity.OperatorEntity;
-import com.study.oksk.entity.ProviderEntity;
+import com.study.oksk.dto.OperatorDto;
+import com.study.oksk.dto.ProviderDto;
 
 public class SessionDto {
     private int id;
-    private OperatorEntity operatorEntity;
+    private OperatorDto operatorDto;
     private String priorityType;
-    private ProviderEntity providerEntity;
+    private ProviderDto providerDto;
     private String sessionName;
 
     public int getId() {
@@ -18,12 +18,12 @@ public class SessionDto {
         this.id = id;
     }
 
-    public OperatorEntity getOperatorEntity() {
-        return operatorEntity;
+    public OperatorDto getOperatorDto() {
+        return operatorDto;
     }
 
-    public void setOperatorEntity(OperatorEntity operatorEntity) {
-        this.operatorEntity = operatorEntity;
+    public void setOperatorDto(OperatorDto operatorDto) {
+        this.operatorDto = operatorDto;
     }
 
     public String getPriorityType() {
@@ -34,12 +34,12 @@ public class SessionDto {
         this.priorityType = priorityType;
     }
 
-    public ProviderEntity getProviderEntity() {
-        return providerEntity;
+    public ProviderDto getProviderDto() {
+        return providerDto;
     }
 
-    public void setProviderEntity(ProviderEntity providerEntity) {
-        this.providerEntity = providerEntity;
+    public void setProviderDto(ProviderDto providerDto) {
+        this.providerDto = providerDto;
     }
 
     public String getSessionName() {

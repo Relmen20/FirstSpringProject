@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
+
 @RestController // TODO:  REST --> ENDPOINTS что это
 @RequestMapping("/api/address")
 public class AddressController {
@@ -22,13 +22,13 @@ public class AddressController {
     }
 
     @GetMapping()
-    public ResponseEntity<Object> findAll(){
+    public ResponseEntity<List<AddressDto>> findAll(){
         try {
             List<AddressDto> addressDto = addressService.findAll();
             if (!addressDto.isEmpty()) {
                 return ResponseEntity.ok(addressDto);
             } else {
-                return ResponseEntity.internalServerError().build();
+                return ResponseEntity.notFound().build();
             }
         }catch(Exception e){
             return ResponseEntity.internalServerError().build();
@@ -36,13 +36,13 @@ public class AddressController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Object> findById(@PathVariable("id") int id){
+    public ResponseEntity<AddressDto> findById(@PathVariable("id") int id){
         try {
             AddressDto addressDto = addressService.findById(id);
             if (addressDto != null) {
                 return ResponseEntity.ok(addressDto);
             } else {
-                return ResponseEntity.internalServerError().build();
+                return ResponseEntity.notFound().build();
             }
         }catch (Exception e){
             return ResponseEntity.internalServerError().build();
@@ -66,7 +66,7 @@ public class AddressController {
                 addressService.deleteById(id);
                 return ResponseEntity.ok(id);
             } else {
-                return ResponseEntity.internalServerError().build();
+                return ResponseEntity.notFound().build();
             }
         }catch (Exception e){
             return ResponseEntity.internalServerError().build();
@@ -74,7 +74,7 @@ public class AddressController {
     }
 
     @PutMapping()
-    public ResponseEntity<Integer> updateAddress(@Validated(value = Exist.class) @RequestBody AddressDto updatedAddressDto) {
+    public ResponseEntity<Integer> updateAddress(@Validated(value = Update.class) @RequestBody AddressDto updatedAddressDto) {
         try {
             AddressDto existingAddressDto = addressService.findById(updatedAddressDto.getId());
             if (existingAddressDto != null) {
@@ -82,7 +82,7 @@ public class AddressController {
                 existingAddressDto.setPort(updatedAddressDto.getPort());
                 return ResponseEntity.ok(addressService.save(existingAddressDto));
             } else {
-                return ResponseEntity.internalServerError().build();
+                return ResponseEntity.notFound().build();
             }
         }catch (Exception e){
             return ResponseEntity.internalServerError().build();
