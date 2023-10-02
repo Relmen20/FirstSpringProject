@@ -2,7 +2,9 @@ package com.study.oksk.mapper;
 
 import com.study.oksk.dto.OperatorDto;
 import com.study.oksk.entity.OperatorEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OperatorMapper {
     public OperatorDto operatorEntityToDto(OperatorEntity operatorEntity){
         if(operatorEntity != null){
