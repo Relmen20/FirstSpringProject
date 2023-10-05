@@ -44,4 +44,13 @@ public class AddressEntity {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    @Override
+    public String toString() {
+        return "AddressEntity{" +
+                "id=" + id +
+                ", port=" + port +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }

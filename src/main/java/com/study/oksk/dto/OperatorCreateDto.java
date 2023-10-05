@@ -1,18 +1,11 @@
 package com.study.oksk.dto;
 
-public class OperatorDto {
+import javax.validation.constraints.NotNull;
 
-    private int id;
+public class OperatorCreateDto {
 
+    @NotNull
     private String operatorName;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getOperatorName() {
         return operatorName;

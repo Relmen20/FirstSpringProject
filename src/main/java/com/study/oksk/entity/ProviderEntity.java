@@ -1,21 +1,24 @@
 package com.study.oksk.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "provider")
 public class ProviderEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @OneToOne(cascade = CascadeType.ALL) //#TODO состояния сущностей в hybernate и CascadeType
+    @OneToOne(cascade = CascadeType.MERGE) //#TODO состояния сущностей в hibernate и CascadeType
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private AddressEntity addressEntity;
     @Column(name = "provider_name")
     private String providerName;
     @Column(name = "email")
     private String email;
+    @OneToMany(mappedBy = "providerEntity", cascade = CascadeType.ALL)
+    private List<SessionEntity> sessionEntityList;
 
     public ProviderEntity(){}
 
@@ -57,4 +60,23 @@ public class ProviderEntity {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return "ProviderEntity{" +
+                "id=" + id +
+                ", addressEntity=" + addressEntity.toString() +
+                ", providerName='" + providerName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+
+    public List<SessionEntity> getSessionEntityList() {
+        return sessionEntityList;
+    }
+
+    public void setSessionEntityList(List<SessionEntity> sessionEntityList) {
+        this.sessionEntityList = sessionEntityList;
+    }
+
 }

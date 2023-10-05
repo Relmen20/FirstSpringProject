@@ -1,17 +1,23 @@
 package com.study.oksk.controller;
 
+import com.study.oksk.dto.AddressCreateDto;
 import com.study.oksk.dto.AddressDto;
+import com.study.oksk.dto.AddressUpdateDto;
 import com.study.oksk.service.AddressService;
-import com.study.oksk.transfer.*;
+import com.study.oksk.transfer.New;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
-@RestController // TODO:  REST --> ENDPOINTS что это
+@RestController
 @RequestMapping("/api/address")
+@Validated
 public class AddressController {
 
     private final AddressService addressService;
@@ -45,9 +51,9 @@ public class AddressController {
     }
 
     @PostMapping()
-    public ResponseEntity<Integer> createAddress(@Validated(value = {New.class}) @RequestBody AddressDto addressDto){
+    public ResponseEntity<Integer> createAddress(@RequestBody @Validated AddressCreateDto addressCreateDto){
         try{
-            return ResponseEntity.ok(addressService.save(addressDto));
+            return ResponseEntity.ok(addressService.create(addressCreateDto));
         }catch(Exception e){
             return ResponseEntity.internalServerError().build();
         }
@@ -69,13 +75,10 @@ public class AddressController {
     }
 
     @PutMapping()
-    public ResponseEntity<Integer> updateAddress(@Validated(value = Update.class) @RequestBody AddressDto updatedAddressDto) {
+    public ResponseEntity<Integer> updateAddress(@RequestBody AddressUpdateDto addressUpdateDto) {
         try {
-            AddressDto existingAddressDto = addressService.findById(updatedAddressDto.getId());
-            if (existingAddressDto != null) {
-                existingAddressDto.setAddress(updatedAddressDto.getAddress());
-                existingAddressDto.setPort(updatedAddressDto.getPort());
-                return ResponseEntity.ok(addressService.save(existingAddressDto));
+            if (addressService.findById(addressUpdateDto.getId()) != null) {
+                return ResponseEntity.ok(addressService.save(addressUpdateDto));
             } else {
                 return ResponseEntity.notFound().build();
             }
@@ -84,14 +87,4 @@ public class AddressController {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
 

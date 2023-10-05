@@ -1,11 +1,22 @@
 package com.study.oksk.dto;
 
-public class AddressDto{
+import com.study.oksk.transfer.Update;
+import com.study.oksk.transfer.New;
 
+import javax.validation.constraints.*;
+
+public class AddressUpdateDto{
+
+    @NotNull
     private int id;
 
+    @NotNull
+    @Min(1024)
+    @Max(65535)
     private int port;
 
+    @NotNull(groups = {New.class, Update.class})
+    @Pattern(regexp = "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$")
     private String address;
 
     public int getId() {
@@ -30,14 +41,5 @@ public class AddressDto{
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    @Override
-    public String toString() {
-        return "AddressDto{" +
-                "id=" + id +
-                ", port=" + port +
-                ", address='" + address + '\'' +
-                '}';
     }
 }

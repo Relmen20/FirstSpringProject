@@ -1,6 +1,8 @@
 package com.study.oksk.controller;
 
+import com.study.oksk.dto.OperatorCreateDto;
 import com.study.oksk.dto.OperatorDto;
+import com.study.oksk.dto.OperatorUpdateDto;
 import com.study.oksk.service.OperatorService;
 import com.study.oksk.transfer.New;
 import com.study.oksk.transfer.Update;
@@ -9,10 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/operator")
+@Validated
 public class OperatorController {
 
     private final OperatorService operatorService;
@@ -46,9 +50,9 @@ public class OperatorController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> save(@Validated(value = {New.class}) @RequestBody OperatorDto operatorDto){
+    public ResponseEntity<Integer> createOperator(@Validated @RequestBody OperatorCreateDto operatorCreateDto){
         try{
-            return ResponseEntity.ok(operatorService.save(operatorDto));
+            return ResponseEntity.ok(operatorService.create(operatorCreateDto));
         }catch (Exception e){
             return ResponseEntity.internalServerError().build();
         }
@@ -70,12 +74,10 @@ public class OperatorController {
     }
 
     @PutMapping
-    public ResponseEntity<Integer> update(@Validated(value = {Update.class}) @RequestBody OperatorDto updateOperatorDto){
+    public ResponseEntity<Integer> updateOperator(@Validated @RequestBody OperatorUpdateDto operatorUpdateDto){
         try{
-            OperatorDto existOperatorDto = operatorService.findById(updateOperatorDto.getId());
-            if(existOperatorDto != null){
-                existOperatorDto.setOperatorName(updateOperatorDto.getOperatorName());
-                return ResponseEntity.ok(operatorService.save(existOperatorDto));
+            if(operatorService.findById(operatorUpdateDto.getId()) != null){
+                return ResponseEntity.ok(operatorService.save(operatorUpdateDto));
             }else{
                 return ResponseEntity.notFound().build();
             }

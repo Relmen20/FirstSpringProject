@@ -1,6 +1,8 @@
 package com.study.oksk.service;
 
+import com.study.oksk.dto.AddressCreateDto;
 import com.study.oksk.dto.AddressDto;
+import com.study.oksk.dto.AddressUpdateDto;
 import com.study.oksk.mapper.AddressMapper;
 import com.study.oksk.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +34,17 @@ public class AddressService {
         return addressMapper.addressEntityToDto(addressRepository.findById(id).orElse(null));
     }
 
-    public int save(AddressDto addressDto) {
-        return addressRepository.save(addressMapper.addressDtoToEntity(addressDto)).getId();
+    public int create(AddressCreateDto addressCreateDto) {
+        return addressRepository.save(addressMapper.addressCreateDtoToEntity(addressCreateDto)).getId();
+    }
+
+    public int save(AddressUpdateDto addressUpdateDto) {
+        return addressRepository.save(addressMapper.addressUpdateDtoToEntity(addressUpdateDto)).getId();
     }
 
     public void deleteById(int id) {
         addressRepository.deleteById(id);
     }
+
+
 }

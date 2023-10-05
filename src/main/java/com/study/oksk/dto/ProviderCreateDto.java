@@ -1,30 +1,18 @@
 package com.study.oksk.dto;
 
-public class ProviderDto {
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
-    private int id;
+public class ProviderCreateDto {
 
-    private AddressDto addressDto;
+    @NotNull
+    private int addressId;
 
+    @NotNull
     private String providerName;
 
+    @NotNull
     private String email;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public AddressDto getAddressDto() {
-        return addressDto;
-    }
-
-    public void setAddressDto(AddressDto addressDto) {
-        this.addressDto = addressDto;
-    }
 
     public String getProviderName() {
         return providerName;
@@ -40,5 +28,13 @@ public class ProviderDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(int addressId) {
+        this.addressId = addressId;
     }
 }

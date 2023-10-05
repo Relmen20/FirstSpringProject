@@ -5,11 +5,11 @@ import com.study.oksk.model.PriorityType;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "session")
+@Table(name = "sessions")
 public class SessionEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @ManyToOne
     @JoinColumn(name = "operator_id", referencedColumnName = "id")
@@ -70,5 +70,16 @@ public class SessionEntity {
 
     public void setSessionName(String sessionName) {
         this.sessionName = sessionName;
+    }
+
+    @Override
+    public String toString() {
+        return "SessionEntity{" +
+                "id=" + id +
+                ", operatorEntity=" + operatorEntity.toString() +
+                ", priorityType=" + priorityType.name() +
+                ", providerEntity=" + providerEntity.toString() +
+                ", sessionName='" + sessionName + '\'' +
+                '}';
     }
 }
