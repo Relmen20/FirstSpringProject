@@ -1,6 +1,8 @@
 package com.study.oksk.mapper;
 
+import com.study.oksk.dto.AddressDto;
 import com.study.oksk.dto.ProviderDto;
+import com.study.oksk.entity.AddressEntity;
 import com.study.oksk.entity.ProviderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +22,7 @@ public class ProviderMapper {
             ProviderDto providerDto = new ProviderDto();
             providerDto.setId(providerEntity.getId());
             providerDto.setProviderName(providerEntity.getProviderName());
-            providerDto.setAddressDto(addressMapper.addressEntityToDto(providerEntity.getAddressEntity()));
+            providerDto.setAddressId(providerEntity.getAddressEntity().getId());
             providerDto.setEmail(providerEntity.getEmail());
             return providerDto;
         }else{
@@ -28,35 +30,13 @@ public class ProviderMapper {
         }
     }
 
-    public ProviderEntity providerCreateDtoToEntity(ProviderDto providerDto){
+    public ProviderEntity providerDtoToEntity(ProviderDto providerDto, AddressDto addressDto) {
         if(providerDto != null){
             ProviderEntity providerEntity = new ProviderEntity();
-            providerEntity.setProviderName(providerDto.getProviderName());
-            providerEntity.setAddressEntity(addressMapper.addressDtoToEntity(providerDto.getAddressDto()));
-            providerEntity.setEmail(providerDto.getEmail());
-            return providerEntity;
-        }else{
-            return null;
-        }
-    }
-
-    public ProviderEntity providerUpdateDtoToEntity(ProviderDto providerDto) {
-        if(providerDto != null){
-            ProviderEntity providerEntity = new ProviderEntity();
-            providerEntity.setId(providerDto.getId());
-            providerEntity.setProviderName(providerDto.getProviderName());
-            providerEntity.setEmail(providerDto.getEmail());
-            return providerEntity;
-        }else{
-            return null;
-        }
-    }
-
-    public ProviderEntity providerDtoToEntity(ProviderDto providerDto) {
-        if(providerDto != null){
-            ProviderEntity providerEntity = new ProviderEntity();
-            providerEntity.setId(providerDto.getId());
-            providerEntity.setAddressEntity(addressMapper.addressDtoToEntity(providerDto.getAddressDto()));
+            if(providerDto.getId() != 0){
+                providerEntity.setId(providerDto.getId());
+            }
+            providerEntity.setAddressEntity(addressMapper.addressDtoToEntity(addressDto));
             providerEntity.setProviderName(providerDto.getProviderName());
             providerEntity.setEmail(providerDto.getEmail());
             return providerEntity;

@@ -1,8 +1,7 @@
 package com.study.oksk.controller;
 
-import com.study.oksk.dto.SessionCreateDto;
 import com.study.oksk.dto.SessionDto;
-import com.study.oksk.dto.SessionUpdateDto;
+import com.study.oksk.model.PriorityType;
 import com.study.oksk.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,9 +46,12 @@ public class SessionController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> createSession(@Validated @RequestBody SessionCreateDto sessionCreateDto){
+    public ResponseEntity<Integer> createSession(@RequestBody SessionDto sessionDto){
         try{
-            return ResponseEntity.ok(sessionService.create(sessionCreateDto));
+            if(sessionDto.getId() == 0 && validateSessionDto(sessionDto)){
+                return ResponseEntity.ok(sessionService.save(sessionDto));
+            }
+            return ResponseEntity.badRequest().build();
         }catch(Exception e){
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
@@ -57,13 +59,14 @@ public class SessionController {
     }
 
     @PutMapping
-    public ResponseEntity<Integer> updateSession(@Validated @RequestBody SessionUpdateDto sessionUpdateDto){
+    public ResponseEntity<Integer> updateSession(@RequestBody SessionDto sessionDto){
         try{
-            SessionDto sessionDto = sessionService.findById(sessionUpdateDto.getId());
-            if(sessionDto == null){
+            if(sessionService.findById(sessionDto.getId()) == null){
                 return ResponseEntity.notFound().build();
+            }else if(!validateSessionDto(sessionDto)){
+                return ResponseEntity.badRequest().build();
             }
-            return ResponseEntity.ok(sessionService.save(sessionUpdateDto));
+            return ResponseEntity.ok(sessionService.save(sessionDto));
         }catch(Exception e){
             return ResponseEntity.internalServerError().build();
         }
@@ -82,5 +85,13 @@ public class SessionController {
         }catch(Exception e){
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    private boolean validateSessionDto(SessionDto sessionDto) {
+    return sessionDto.getOperatorId() != 0  &&
+            sessionDto.getProviderId() != 0 &&
+            sessionDto.getSessionName() != null &&
+            (sessionDto.getPriorityType().equals(PriorityType.DEFAULT.name()) ||
+             (sessionDto.getPriorityType().equals(PriorityType.VIP.name())));
     }
 }

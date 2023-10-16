@@ -1,5 +1,7 @@
 package com.study.oksk.entity;
 
+import org.hibernate.annotations.OnDelete;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -10,8 +12,9 @@ public class ProviderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @OneToOne(cascade = CascadeType.MERGE) //#TODO состояния сущностей в hibernate и CascadeType
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER) //#TODO состояния сущностей в hibernate и CascadeType
     @JoinColumn(name = "address_id", referencedColumnName = "id")
+//    @OnDelete(action = CascadeType.ALL)
     private AddressEntity addressEntity;
     @Column(name = "provider_name")
     private String providerName;

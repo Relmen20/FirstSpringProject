@@ -21,6 +21,10 @@ public class AddressEntity {
         this.address = address;
     }
 
+    public AddressEntity(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

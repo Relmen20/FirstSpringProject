@@ -1,8 +1,6 @@
 package com.study.oksk.service;
 
-import com.study.oksk.dto.SessionCreateDto;
-import com.study.oksk.dto.SessionDto;
-import com.study.oksk.dto.SessionUpdateDto;
+import com.study.oksk.dto.*;
 import com.study.oksk.entity.SessionEntity;
 import com.study.oksk.mapper.SessionMapper;
 import com.study.oksk.repository.SessionRepository;
@@ -18,13 +16,15 @@ public class SessionService {
     private final SessionRepository sessionRepository;
     private final ProviderService providerService;
     private final OperatorService operatorService;
+    private final AddressService addressService;
     private final SessionMapper sessionMapper;
 
     @Autowired
-    public SessionService(SessionRepository sessionRepository, ProviderService providerService, OperatorService operatorService, SessionMapper sessionMapper) {
+    public SessionService(SessionRepository sessionRepository, ProviderService providerService, OperatorService operatorService, AddressService addressService, SessionMapper sessionMapper) {
         this.sessionRepository = sessionRepository;
         this.providerService = providerService;
         this.operatorService = operatorService;
+        this.addressService = addressService;
         this.sessionMapper = sessionMapper;
     }
 
@@ -38,29 +38,12 @@ public class SessionService {
                 .collect(Collectors.toList());
     }
 
-    public int create(SessionCreateDto sessionCreateDto){
-        SessionDto sessionDto = new SessionDto();
-        sessionDto.setSessionName(sessionCreateDto.getSessionName());
-        sessionDto.setPriorityType(sessionCreateDto.getPriorityType());
-        sessionDto.setOperatorDto(operatorService.findById(sessionCreateDto.getOperatorId()));
-        sessionDto.setProviderDto(providerService.findById(sessionCreateDto.getProviderId()));
+    public int save(SessionDto sessionDto){
+        OperatorDto operatorDto = operatorService.findById(sessionDto.getOperatorId());
+        ProviderDto providerDto = providerService.findById(sessionDto.getProviderId());
+        AddressDto addressDto = addressService.findById(providerDto.getAddressId());
 
-        SessionEntity sessionEntity = sessionMapper.sessionCreateDtoToEntity(sessionDto);
-
-        System.out.println(sessionEntity.toString());
-
-        return sessionRepository.save(sessionEntity).getId();
-    }
-
-    public int save(SessionUpdateDto sessionUpdateDto){
-        SessionDto sessionDto = new SessionDto();
-        sessionDto.setId(sessionUpdateDto.getId());
-        sessionDto.setSessionName(sessionUpdateDto.getSessionName());
-        sessionDto.setPriorityType(sessionUpdateDto.getPriorityType());
-        sessionDto.setOperatorDto(operatorService.findById(sessionUpdateDto.getOperatorId()));
-        sessionDto.setProviderDto(providerService.findById(sessionUpdateDto.getProviderId()));
-
-        return sessionRepository.save(sessionMapper.sessionUpdateDtoToEntity(sessionDto)).getId();
+        return sessionRepository.save(sessionMapper.sessionDtoToEntity(sessionDto, operatorDto, providerDto, addressDto)).getId();
     }
 
     public void deleteById(int id){

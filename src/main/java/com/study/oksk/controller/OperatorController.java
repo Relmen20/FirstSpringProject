@@ -1,22 +1,15 @@
 package com.study.oksk.controller;
 
-import com.study.oksk.dto.OperatorCreateDto;
 import com.study.oksk.dto.OperatorDto;
-import com.study.oksk.dto.OperatorUpdateDto;
 import com.study.oksk.service.OperatorService;
-import com.study.oksk.transfer.New;
-import com.study.oksk.transfer.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/operator")
-@Validated
 public class OperatorController {
 
     private final OperatorService operatorService;
@@ -50,9 +43,12 @@ public class OperatorController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> createOperator(@Validated @RequestBody OperatorCreateDto operatorCreateDto){
+    public ResponseEntity<Integer> createOperator(@RequestBody OperatorDto operatorDto){
         try{
-            return ResponseEntity.ok(operatorService.create(operatorCreateDto));
+            if(operatorDto.getId() == 0 && validateOperatorDto(operatorDto)){
+                return ResponseEntity.ok(operatorService.save(operatorDto));
+            }
+            return ResponseEntity.badRequest().build();
         }catch (Exception e){
             return ResponseEntity.internalServerError().build();
         }
@@ -74,16 +70,22 @@ public class OperatorController {
     }
 
     @PutMapping
-    public ResponseEntity<Integer> updateOperator(@Validated @RequestBody OperatorUpdateDto operatorUpdateDto){
+    public ResponseEntity<Integer> updateOperator(@RequestBody OperatorDto operatorDto){
         try{
-            if(operatorService.findById(operatorUpdateDto.getId()) != null){
-                return ResponseEntity.ok(operatorService.save(operatorUpdateDto));
-            }else{
+            if(operatorService.findById(operatorDto.getId()) == null){
                 return ResponseEntity.notFound().build();
+            }else if(validateOperatorDto(operatorDto)){
+                return ResponseEntity.badRequest().build();
             }
+            return ResponseEntity.ok(operatorService.save(operatorDto));
         }catch(Exception e){
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    private boolean validateOperatorDto(OperatorDto operatorDto) {
+        return operatorDto.getOperatorName() != null;
+    }
+
 
 }

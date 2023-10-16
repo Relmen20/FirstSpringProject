@@ -1,8 +1,6 @@
 package com.study.oksk.service;
 
-import com.study.oksk.dto.OperatorCreateDto;
 import com.study.oksk.dto.OperatorDto;
-import com.study.oksk.dto.OperatorUpdateDto;
 import com.study.oksk.mapper.OperatorMapper;
 import com.study.oksk.repository.OperatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +31,8 @@ public class OperatorService {
         return operatorMapper.operatorEntityToDto(operatorRepository.findById(id).orElse(null));
     }
 
-    public int create(OperatorCreateDto operatorCreateDto){
-        return operatorRepository.save(operatorMapper.operatorCreateDtoToEntity(operatorCreateDto)).getId();
-    }
-
-    public int save(OperatorUpdateDto operatorUpdateDto){
-        return operatorRepository.save(operatorMapper.operatorUpdateDtoToEntity(operatorUpdateDto)).getId();
+    public int save(OperatorDto operatorDto){
+        return operatorRepository.save(operatorMapper.operatorDtoToEntity(operatorDto)).getId();
     }
 
     public void deleteById(int id){

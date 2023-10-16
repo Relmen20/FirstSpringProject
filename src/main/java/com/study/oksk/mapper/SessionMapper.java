@@ -1,5 +1,8 @@
 package com.study.oksk.mapper;
 
+import com.study.oksk.dto.AddressDto;
+import com.study.oksk.dto.OperatorDto;
+import com.study.oksk.dto.ProviderDto;
 import com.study.oksk.dto.SessionDto;
 import com.study.oksk.entity.SessionEntity;
 import com.study.oksk.model.PriorityType;
@@ -11,14 +14,13 @@ public class SessionMapper {
 
     private final ProviderMapper providerMapper;
     private final OperatorMapper operatorMapper;
+    private final AddressMapper addressMapper;
 
     @Autowired
-    public SessionMapper(ProviderMapper providerMapper, OperatorMapper operatorMapper) {
-
-
-
+    public SessionMapper(ProviderMapper providerMapper, OperatorMapper operatorMapper, AddressMapper addressMapper) {
         this.providerMapper = providerMapper;
         this.operatorMapper = operatorMapper;
+        this.addressMapper = addressMapper;
     }
 
     public SessionDto sessionEntityToDto(SessionEntity sessionEntity){
@@ -26,8 +28,8 @@ public class SessionMapper {
             SessionDto sessionDto = new SessionDto();
             sessionDto.setId(sessionEntity.getId());
             sessionDto.setSessionName(sessionEntity.getSessionName());
-            sessionDto.setOperatorDto(operatorMapper.operatorEntityToDto(sessionEntity.getOperator()));
-            sessionDto.setProviderDto(providerMapper.providerEntityToDto(sessionEntity.getProvider()));
+            sessionDto.setOperatorId(sessionEntity.getOperator().getId());
+            sessionDto.setProviderId(sessionEntity.getProvider().getId());
             sessionDto.setPriorityType(sessionEntity.getPriorityType().name());
             return sessionDto;
         }else{
@@ -35,27 +37,15 @@ public class SessionMapper {
         }
     }
 
-    public SessionEntity sessionCreateDtoToEntity(SessionDto sessionDto){
-        if(sessionDto != null){
-            SessionEntity sessionEntity = new SessionEntity();
-            sessionEntity.setSessionName(sessionDto.getSessionName());
-            sessionEntity.setOperator(operatorMapper.operatorDtoToEntity(sessionDto.getOperatorDto()));
-            sessionEntity.setProvider(providerMapper.providerDtoToEntity(sessionDto.getProviderDto()));
-            sessionEntity.setPriorityType(PriorityType.valueOf(sessionDto.getPriorityType()));
-            return sessionEntity;
-        }else{
-            return null;
-        }
-    }
-
-    public SessionEntity sessionUpdateDtoToEntity(SessionDto sessionDto){
+    public SessionEntity sessionDtoToEntity(SessionDto sessionDto, OperatorDto operatorDto, ProviderDto providerDto, AddressDto addressDto) {
         if(sessionDto != null){
             SessionEntity sessionEntity = new SessionEntity();
             sessionEntity.setId(sessionDto.getId());
             sessionEntity.setSessionName(sessionDto.getSessionName());
-            sessionEntity.setOperator(operatorMapper.operatorDtoToEntity(sessionDto.getOperatorDto()));
-            sessionEntity.setProvider(providerMapper.providerDtoToEntity(sessionDto.getProviderDto()));
             sessionEntity.setPriorityType(PriorityType.valueOf(sessionDto.getPriorityType()));
+
+            sessionEntity.setProvider(providerMapper.providerDtoToEntity(providerDto,addressDto));
+            sessionEntity.setOperator(operatorMapper.operatorDtoToEntity(operatorDto));
             return sessionEntity;
         }else{
             return null;

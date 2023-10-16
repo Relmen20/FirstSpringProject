@@ -1,22 +1,15 @@
 package com.study.oksk.controller;
 
-import com.study.oksk.dto.ProviderCreateDto;
 import com.study.oksk.dto.ProviderDto;
-import com.study.oksk.dto.ProviderUpdateDto;
-import com.study.oksk.entity.ProviderEntity;
 import com.study.oksk.service.ProviderService;
-import com.study.oksk.transfer.New;
-import com.study.oksk.transfer.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/provider")
-@Validated
 public class ProviderController {
 
     private final ProviderService providerService;
@@ -50,9 +43,12 @@ public class ProviderController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> createProvider(@Validated @RequestBody ProviderCreateDto providerCreateDto){
+    public ResponseEntity<Integer> createProvider(@RequestBody ProviderDto providerDto){
         try{
-            return ResponseEntity.ok(providerService.create(providerCreateDto));
+            if(providerDto.getId() == 0 && validateProviderDto(providerDto)){
+                return ResponseEntity.ok(providerService.save(providerDto));
+            }
+            return ResponseEntity.badRequest().build();
         }catch(Exception e){
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
@@ -75,15 +71,22 @@ public class ProviderController {
     }
 
     @PutMapping
-    public ResponseEntity<Integer> updateProvider(@Validated @RequestBody ProviderUpdateDto providerUpdateDto){
+    public ResponseEntity<Integer> updateProvider(@RequestBody ProviderDto providerDto){
         try{
-            ProviderDto existProviderDto = providerService.findById(providerUpdateDto.getId());
-            if(existProviderDto == null){
+            if(providerService.findById(providerDto.getId()) == null){
                 return ResponseEntity.notFound().build();
+            } else if (validateProviderDto(providerDto)) {
+                return ResponseEntity.badRequest().build();
             }
-            return ResponseEntity.ok(providerService.save(providerUpdateDto));
+            return ResponseEntity.ok(providerService.save(providerDto));
         }catch (Exception e){
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    private boolean validateProviderDto(ProviderDto providerDto) {
+        return providerDto.getAddressId() != 0 &&
+               providerDto.getProviderName() != null &&
+               providerDto.getEmail() != null;
     }
 }

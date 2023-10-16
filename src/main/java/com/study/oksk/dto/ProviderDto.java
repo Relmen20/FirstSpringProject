@@ -4,7 +4,7 @@ public class ProviderDto {
 
     private int id;
 
-    private AddressDto addressDto;
+    private int addressId;
 
     private String providerName;
 
@@ -18,12 +18,12 @@ public class ProviderDto {
         this.id = id;
     }
 
-    public AddressDto getAddressDto() {
-        return addressDto;
+    public int getAddressId() {
+        return addressId;
     }
 
-    public void setAddressDto(AddressDto addressDto) {
-        this.addressDto = addressDto;
+    public void setAddressId(int addressId) {
+        this.addressId = addressId;
     }
 
     public String getProviderName() {

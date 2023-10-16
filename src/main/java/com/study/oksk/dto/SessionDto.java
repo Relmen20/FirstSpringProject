@@ -5,9 +5,9 @@ import com.study.oksk.dto.ProviderDto;
 
 public class SessionDto {
     private int id;
-    private OperatorDto operatorDto;
+    private int operatorId;
     private String priorityType;
-    private ProviderDto providerDto;
+    private int providerId;
     private String sessionName;
 
     public int getId() {
@@ -18,14 +18,6 @@ public class SessionDto {
         this.id = id;
     }
 
-    public OperatorDto getOperatorDto() {
-        return operatorDto;
-    }
-
-    public void setOperatorDto(OperatorDto operatorDto) {
-        this.operatorDto = operatorDto;
-    }
-
     public String getPriorityType() {
         return priorityType;
     }
@@ -34,12 +26,20 @@ public class SessionDto {
         this.priorityType = priorityType;
     }
 
-    public ProviderDto getProviderDto() {
-        return providerDto;
+    public int getOperatorId() {
+        return operatorId;
     }
 
-    public void setProviderDto(ProviderDto providerDto) {
-        this.providerDto = providerDto;
+    public void setOperatorId(int operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public int getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(int providerId) {
+        this.providerId = providerId;
     }
 
     public String getSessionName() {
